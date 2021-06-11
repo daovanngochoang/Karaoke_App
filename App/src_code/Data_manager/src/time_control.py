@@ -31,11 +31,11 @@ class time_control:
         :param ending_time: end time
         :return: the time interval between start and ending time
         """
-        FMT = '%H:%M'
+        FMT = '%H:%M' # time format
         time_delta = datetime.strptime(ending_time, FMT) - datetime.strptime(starting_time, FMT)
         new_time_del = ''
         count = 0
-        for i in str(time_delta):
+        for i in str(time_delta): # get h:m remove sec
             if i == ":":
                 count += 1
             if count == 2:
@@ -44,7 +44,7 @@ class time_control:
 
         len_time = len(new_time_del)
         final_time = ""
-        if len_time >5:
+        if len_time > 5:  # for example 1 day 0:59 => get 0:59
             for i in range(1, 6):
                 final_time += new_time_del[len_time - i]
 

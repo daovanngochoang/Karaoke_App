@@ -27,7 +27,7 @@ class product_manager:
         wb = openpyxl.load_workbook(xlsx_file)
         sheet = wb.active
         result = []
-
+        # read all info from the file and insert
         for col in sheet.iter_cols():
             for row_value_num in range(2, len(col) + 5):
                 if sheet["A" + str(row_value_num)].value is not None:

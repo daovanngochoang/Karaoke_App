@@ -12,7 +12,7 @@ class Order_manager:
 
         command = "INSERT INTO {} (Order_ID, Order_name, debtor, Order_day, Order_starting_time, Order_ending_time," \
                   "total_time, total_price, bill_file) VALUE ('%s','%s','%s','%s','%s','%s','%s','%s','%s')".format(table)%(id,
-                                                                                                            Order_name, debtor, Order_day, Order_starting_time, Order_ending_time, total_time, total_price, bill_file)
+                    Order_name, debtor, Order_day, Order_starting_time, Order_ending_time, total_time, total_price, bill_file)
 
         self.storage.execute_query(command)
         print("Successfully insert order %s at %s" % (Order_name, Order_starting_time))
@@ -20,10 +20,17 @@ class Order_manager:
         return id
 
     def search_all_order_info(self, order_id, table="orders"):
+        """
+        all info of a bill
+        :param order_id:
+        :param table:
+        :return:
+        """
         result = self.storage.Storage_search("Order_ID", order_id, table)
         return result
 
     def select_all(self):
+
         cur = self.storage.Select_all("orders")
         result = []
         count = 0

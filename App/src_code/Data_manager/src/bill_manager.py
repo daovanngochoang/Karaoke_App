@@ -17,31 +17,51 @@ class bill_manager:
         self.order_detail = Order_detail_manager()
         self.order_control = Order_manager()
 
+        # the path of the bill form
         self.origin_path = "Data_manager/bill_form/Form_bill.docx"
+
+        # the path where the bill thats not containing debtor stored in
         self.parent_dir = "C:/Users/LENOVO/Desktop/bill_data/Bill_không_nợ/"
+
+        # the path of bill containing debtor is stored
         self.deb_parent_dir = "C:/Users/LENOVO/Desktop/bill_data/Bill_nợ/"
 
-
-    def ratio_value(self, value):
+    # centered the value in the table cells
+    @staticmethod
+    def ratio_value(value):
+        """
+        calculate the size of th value and make it centered
+        """
         box_size = 9
         ratio = abs(len(value) - box_size)
         return ratio * " "
 
-    def fix_text(self, para):
+    @staticmethod
+    def fix_text(para):
         max_size = 46
         ratio = max_size - len(para)
         ratio_final = int(np.floor(ratio / 2))
         return ratio_final * ' '
 
     def get_bill(self, file_bill):
+        """
+        get bill into a text format to display in the label
+        :param file_bill: the location of the bill
+        :return: bill info including all info into the bill file
+        """
+
+        # read docx file using docx
         doc = docx.api.Document(file_bill)
         all_paras = doc.paragraphs
         table = doc.tables[0]
         bill_infor = []
+
+        # the para from 0 to 5 is the header of the bill so we get them all and add to the info
         for para in range(0, 5):
             text = "%s" % all_paras[para].text
             bill_infor.append("\n%s\n" % text)
 
+        # get all info from the table that display the item, price, quantity and total price
         for row in table.rows:
             table = "  %s {} %s {} %s {} %s {} " % (
                 row.cells[0].text, row.cells[1].text, row.cells[2].text, row.cells[3].text)
@@ -49,30 +69,30 @@ class bill_manager:
                                  self.ratio_value(row.cells[2].text), self.ratio_value(row.cells[3].text))
             bill_infor.append("\n%s\n" % final)
 
+        # the ending greeting is the last 3 paragraphs
         for para in range(len(all_paras) - 3, len(all_paras)):
             text = "\n%s" % all_paras[para].text
             bill_infor.append(text)
 
         return bill_infor
 
-    def add_infor(self, file_name, save_direction, file_option = None,font_size=11, text=None, option=None):
+    def add_infor(self, file_name, save_direction, file_option=None, font_size=11, text=None, option=None):
 
         """
-        Add info to the form bill
+        Add info to the form bill with style
 
-        :param file_name:
-        :param save_direction:
-        :param font_size:
-        :param text:
+        :param file_name: file's origin direction
+        :param save_direction: the new address
+        :param font_size: the font style
+        :param text: the text that you want to add
         :param file_option: default to use the default form bill and None for any text
         :param option: None to any option and end to add the ending paragraph
         :return:
         """
 
         if file_option == None:
-
             file_name = "../Data_manager/bill_form/Form_bill.docx"
-            save_direction = "C:/Users/LENOVO/Desktop/bill_data/"+save_direction
+            save_direction = "C:/Users/LENOVO/Desktop/bill_data/" + save_direction
             print(save_direction)
         doc = docx.Document(file_name)
 
@@ -104,25 +124,20 @@ class bill_manager:
             else:
                 parag.add_run(text)
 
-
-
         doc.save(save_direction)
 
-    def insert_table(self, file_name, save_direction, nrows):
+    def insert_table(self, file_name, save_direction, nrows): # insert a table to the docx with centered position
         document = docx.Document(file_name)
         table = document.add_table(rows=nrows, cols=4)
         table.alignment = WD_TABLE_ALIGNMENT.CENTER
         document.save(save_direction)
 
+    # insert info into the table of the file
     def insert_row_and_value(self, file_name, save_direction, info):
-        document = docx.Document(file_name)
-        # print(document.tables)
-        table = document.tables[0]
+        document = docx.Document(file_name) # read file
+        table = document.tables[0] # get the table with index
 
-        # print(info)
-        for item in info:
-
-            # print(item)
+        for item in info: # add individually items in the info
             cells = table.add_row().cells
             # add value cell 1 and change the font size
             cells[0].text = str(item[1])
@@ -132,7 +147,7 @@ class bill_manager:
             run = run_obj[0]
             font = run.font
             font.size = Pt(10)
-            font.name  = 'Calibri'
+            font.name = 'Calibri'
 
             # add value cell 1 and change the font size
             cells[1].text = str(item[2])
@@ -142,7 +157,7 @@ class bill_manager:
             run = run_obj[0]
             font = run.font
             font.size = Pt(10)
-            font.name  = 'Calibri'
+            font.name = 'Calibri'
 
             # add value cell 1 and change the font size
             cells[2].text = str(item[3])
@@ -152,8 +167,7 @@ class bill_manager:
             run = run_obj[0]
             font = run.font
             font.size = Pt(10)
-            font.name  = 'Calibri'
-
+            font.name = 'Calibri'
 
             cells[3].text = str(item[4])
             paragraphs = cells[3].paragraphs
@@ -162,12 +176,12 @@ class bill_manager:
             run = run_obj[0]
             font = run.font
             font.size = Pt(10)
-            font.name  = 'Calibri'
+            font.name = 'Calibri'
 
-
-        document.save(save_direction)
+        document.save(save_direction) # save the file
 
     def show_bill_to_label(self, widow, file):
+        # show bill to the label in the UI and centered it
         text = self.get_bill(file)
         for para in text:
             widow.tag_configure("center", justify='center')
@@ -175,10 +189,14 @@ class bill_manager:
             widow.insert(tk.END, para)
 
     def in_Bill(self, name):
-        # print(name)
-        win32api.ShellExecute(0, "print", name, '/d:"%s"' % win32print.GetDefaultPrinter (),".",0)
+        """
+        print hard copy of the bill using win32api
+        :param name:
+        :return:
+        """
+        win32api.ShellExecute(0, "print", name, '/d:"%s"' % win32print.GetDefaultPrinter(), ".", 0)
 
-    def create_dir(self, directory):
+    def create_dir(self, directory): # check and create directory
 
         parent_dir = "C:/Users/LENOVO/Desktop/bill_data"
         if not self.check_dir(parent_dir):
@@ -194,21 +212,28 @@ class bill_manager:
         isdir = os.path.isdir(path)
         return isdir
 
-    def complete_bill(self, window, order_id, bill_name, date, origin_time_price,Total, Time, time_price):
+    def complete_bill(self, window, order_id, bill_name, date, origin_time_price, Total, Time, time_price):
+        """
+        - complete the bill \n
+            \t+ create the file name in the bill folder\n
+            \t+ get the bill info from database\n
+            \t+ insert that info to the bill form and save into the bill folder\n
+            \t+ insert date, total price, and total time price to the table in the file of the bill in folder bill\n
+            \t+ add the ending line \n
+            \t+ show the file to the display label\n
+
+        :param window: the window to display the bill
+        :param order_id: the id of the order to get its info
+        :param bill_name: the name of the bill to create the file bill
+        :param date: the date of the bill
+        :param origin_time_price: the time price
+        :param Total: total price of the bill
+        :param Time: the time interval that people use the karaoke room
+        :param time_price: time price
+        :return: path that the initial bill located
         """
 
-        :param window:
-        :param order_id:
-        :param bill_name:
-        :param date:
-        :param origin_time_price:
-        :param Total:
-        :param Time:
-        :param time_price:
-        :return:
-        """
-
-        path_file = self.parent_dir+bill_name+".docx"
+        path_file = self.parent_dir + bill_name + ".docx"
 
         if not self.check_dir(self.parent_dir):
             self.create_dir(self.parent_dir)
@@ -216,18 +241,17 @@ class bill_manager:
         bill_info = self.order_detail.select_detail_order(order_id)
         self.insert_row_and_value(self.origin_path, path_file, bill_info)
 
-        infor  = [("","Thời gian", origin_time_price , Time, time_price),
-                  ("","", "", 'Ngày', date),
-                  ("","", "", 'Tổng', Total)
-                  ]
+        infor = [("", "Thời gian", origin_time_price, Time, time_price),
+                 ("", "", "", 'Ngày', date),
+                 ("", "", "", 'Tổng', Total)
+                 ]
         self.insert_row_and_value(path_file, path_file, infor)
-        self.add_infor(path_file, path_file, "save", font_size=10, text=" " , option="end")
+        self.add_infor(path_file, path_file, "save", font_size=10, text=" ", option="end")
         self.show_bill_to_label(window, path_file)
 
         return path_file
 
-
-    def manage_debtor(self, order_id,debtor, old_path, debtor_new_file):
+    def manage_debtor(self, order_id, debtor, old_path, debtor_new_file):
         """
         if debtor exist => add debtor to the bill and save in the debtor directory and remove the initial bill file
         :param order_id:
@@ -240,7 +264,7 @@ class bill_manager:
         if not self.check_dir(self.deb_parent_dir):
             self.create_dir(self.deb_parent_dir)
 
-        new_path = self.deb_parent_dir+debtor_new_file
+        new_path = self.deb_parent_dir + debtor_new_file
 
         if len(debtor) > 1:
 
@@ -252,9 +276,4 @@ class bill_manager:
                 os.remove(old_path)
             else:
                 print("The file does not exist")
-            return  new_path
-
-
-
-
-
+            return new_path
