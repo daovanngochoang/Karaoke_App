@@ -1,4 +1,4 @@
-# Stubs for distutils.dist
+# Stubs for distutils.executable_win10_app_and_dependencies
 from distutils.cmd import Command
 
 from typing import Any, Mapping, Optional, Dict, Tuple, Iterable, Text
