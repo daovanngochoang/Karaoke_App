@@ -14,6 +14,7 @@ class tab:
         self.tab_parent =tab_parent
         self.room_name = 1
         self.product_frame = False
+        self.newWindow =''
 
         self.millisec = 00
         self.sec = 00
@@ -167,41 +168,46 @@ class tab:
             pass
 
     def add(self):
-        # if self.product_frame == False:
-            newWindow = Toplevel(self.root)
-            newWindow.geometry("900x700")
-            newWindow.maxsize(width=900, height=700)
-            newWindow.title("sản phẩm")
-            newWindow.configure(bg="white")
+
+            if self.product_frame == True:
+                self.newWindow.destroy()
+                self.product_frame = False
+
+            self.newWindow = Toplevel(self.root)
+            self.newWindow.geometry("900x700")
+            self.newWindow.maxsize(width=900, height=700)
+            self.newWindow.title("sản phẩm")
+            self.newWindow.configure(bg="white")
+
 
             # p1 = PhotoImage(file='../GUI/Main_image/logo.png')
             # # Icon set for program windowX
-            # newWindow.iconphoto(False, p1)
+            # self.newWindow.iconphoto(False, p1)
 
-            Label(newWindow, text="tên sản phẩm : ", font=('Time New Roman', 18), bg="white").place(
+            Label(self.newWindow, text="tên sản phẩm : ", font=('Time New Roman', 18), bg="white").place(
                 x=20, y=2)
 
-            Label(newWindow, text="số lượng : ", font=('Time New Roman', 18), bg="white").place(
+            Label(self.newWindow, text="số lượng : ", font=('Time New Roman', 18), bg="white").place(
                 x=440, y=2)
 
             self.text_variable = IntVar()
 
-            Spinbox(newWindow, font=('Time New Roman', 17), borderwidth="2", relief="groove", from_=1, to=100.0,
+            Spinbox(self.newWindow, font=('Time New Roman', 17), borderwidth="2", relief="groove", from_=1, to=100.0,
                     increment=1.0,
                     textvariable=self.text_variable).place(x=570, y=1, width=100, height=40)
-            Button(newWindow, text="OK", font=('Time New Roman', 17), bg="#505863", fg="#FFDC82",
+            Button(self.newWindow, text="OK", font=('Time New Roman', 17), bg="#505863", fg="#FFDC82",
                    command=lambda: [self.control.add_product(self.text_variable, self.order_show), self.control.set_quantity(self.text_variable, 1),
                                     self.control.reset_text(frame_show_name)], relief=FLAT).place(x=700, y=5, width=80,
                                                                                                   height=30)
 
             # Create a Label
-            Label(newWindow, text="chọn sản phẩm ", font=('Aerial 20 bold'), bg="white").place(x=300, y=60)
+            Label(self.newWindow, text="chọn sản phẩm ", font=('Aerial 20 bold'), bg="white").place(x=300, y=60)
 
             # frame show name san pham
-            frame_show_name = Label(newWindow, bg="white", borderwidth="2", relief="groove")
+            frame_show_name = Label(self.newWindow, bg="white", borderwidth="2", relief="groove")
             frame_show_name.place(x=200, y=2, width=220, height=40)
 
-            frame_container = Frame(newWindow)
+            frame_container = Frame(self.newWindow)
             canvas_container = Canvas(frame_container, width=885, height=600, bg="#505863", bd=0, highlightthickness=0,
                                       relief='ridge')
             frame2 = Frame(canvas_container, bg="#505863")
@@ -260,5 +266,5 @@ class tab:
             canvas_container.bind('<Leave>', _unbind_from_mousewheel)
 
             self.product_frame = True
-            newWindow.mainloop()
+            self.newWindow.mainloop()
 
