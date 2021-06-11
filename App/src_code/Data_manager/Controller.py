@@ -7,8 +7,6 @@ from Data_manager.src.bill_manager import bill_manager
 import numpy as np
 
 
-
-
 class Controler:
     def __init__(self, room):
 
@@ -34,7 +32,6 @@ class Controler:
         self.origin_time_price = 0
         self.room_name = room
 
-
     def get_product_id(self, product_id, window, name):
         # get product id from button that display product
         window.config(text=name, font=('Helvetica 18 bold'))
@@ -47,6 +44,7 @@ class Controler:
     # get and set product quantity
     def get_quantity(self, spin_text):
         return int(spin_text.get())
+
     def set_quantity(self, spin_text, number):
         return spin_text.set(number)
 
@@ -118,7 +116,6 @@ class Controler:
         else:
             self.order_detail_control.insert(self.order_id, self.product_id, quantity)
 
-
         # insert to treeview
         infor = self.order_detail_control.select_detail_product_from_order(self.order_id, self.product_id)
         try:
@@ -129,8 +126,6 @@ class Controler:
 
     def delete_empty_bills(self):
         self.order_control.delete_empty_bills()
-
-
 
     def order_closing(self, window, room_class):
         """
@@ -156,14 +151,10 @@ class Controler:
         # check if the bill's total price is > 0
         total = self.order_control.get_price(self.order_id)
         # or self.Storage.remove_dot_to_number(total) == 0
-        if total == "None" or total == "0" :
+        if total == "None" or total == "0":
             self.order_control.delete(self.order_id)
 
     def clear_tree_view(self, treeview):
-        # product_id = self.order_detail_control.select_detail_order(self.order_id)
-        # for i in product_id:
-        #     self.tree_view_control(treeview, i[0])
-        # def delete_trv(self, treeview):
         for item in treeview.get_children():
             treeview.delete(item)
 
@@ -217,7 +208,6 @@ class Controler:
                                                       "orders")
             self.bill_created = True
 
-
         self.order_control.update_start(starting_time, self.order_id)
 
     def end_time(self):
@@ -254,12 +244,12 @@ class Controler:
             price = self.Storage.remove_dot_to_number(price)
             total_product_price += price
 
-        #calculate total and add dot to the int and update to database
+        # calculate total and add dot to the int and update to database
         self.total_price = self.time_price + total_product_price
         self.total_price = self.Storage.add_dot(int(self.total_price))
         self.order_control.update_price(self.total_price, Order_ID)
 
-    def calculate_time_price(self, starting_time, ending_time, room_class = 'normal'):
+    def calculate_time_price(self, starting_time, ending_time, room_class='normal'):
         """
         estimate time price every 10 minutes
         :param starting_time:
@@ -274,7 +264,6 @@ class Controler:
         time_class = 'thời gian'
         if room_class == 'VIP':
             time_class = 'thời gian(VIP)'
-
 
         # get directly time id in product_data
         origin_price = self.origin_time_price = self.product_control.get_price_by_name(time_class)
