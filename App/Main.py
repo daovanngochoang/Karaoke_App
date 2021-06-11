@@ -35,11 +35,11 @@ class UI_window_fullHD:
         tab(self.master, self.tab_paren, "Phòng 3")
         tab(self.master, self.tab_paren, "Phòng 4")
         tab(self.master, self.tab_paren, "Phòng 5")
-        tab(self.master, self.tab_paren, "Phòng 6")
-        tab(self.master, self.tab_paren, "Phòng 7")
-        tab(self.master, self.tab_paren, "Phòng 8")
-        tab(self.master, self.tab_paren, "Phòng 9")
-        tab(self.master, self.tab_paren, "Phòng 10")
+        tab(self.master, self.tab_paren, "Phòng 6(VIP)", room_class="VIP")
+        tab(self.master, self.tab_paren, "Phòng 7(VIP)", room_class="VIP")
+        tab(self.master, self.tab_paren, "Phòng 8(VIP)", room_class="VIP")
+        tab(self.master, self.tab_paren, "Phòng 9(VIP)", room_class="VIP")
+        tab(self.master, self.tab_paren, "Phòng 10(VIP)", room_class="VIP")
 
 
 root = Tk()

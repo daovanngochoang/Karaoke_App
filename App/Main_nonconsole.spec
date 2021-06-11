@@ -36,4 +36,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='Main')
+               name='Main_Nonconsole')

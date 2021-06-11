@@ -7,7 +7,6 @@ from Data_manager.src.bill_manager import bill_manager
 import numpy as np
 
 
-# from GUI.tab import tab
 
 
 class Controler:
@@ -133,7 +132,7 @@ class Controler:
 
 
 
-    def order_closing(self, window, treeview):
+    def order_closing(self, window, room_class):
         """
         + get ending time
         + insert total time to database
@@ -147,7 +146,7 @@ class Controler:
 
         self.end_time()
         # insert total time to database
-        self.insert_total_time(self.order_id)
+        self.insert_total_time(self.order_id, room_class)
         # calculate total time
         self.calculate_total_price(self.order_id)
         # get the file path where the bill is created and show to the label
@@ -226,14 +225,14 @@ class Controler:
         ending_time = self.time_control.get_current_time()
         self.order_control.update_end(ending_time, self.order_id)
 
-    def insert_total_time(self, Order_id):
+    def insert_total_time(self, Order_id, room_class):
         # get the starting and ending time and estimate the time interval and calculate the price
         try:
             # get start and ending time
             start, end, total = self.order_control.get_time(Order_id)
 
             # estimate the total time interval & calculate the time price and update to database
-            self.total_time, self.time_price = self.calculate_time_price(start, end)
+            self.total_time, self.time_price = self.calculate_time_price(start, end, room_class)
             self.order_control.update_total_time(self.total_time, Order_id)
 
 
@@ -260,7 +259,7 @@ class Controler:
         self.total_price = self.Storage.add_dot(int(self.total_price))
         self.order_control.update_price(self.total_price, Order_ID)
 
-    def calculate_time_price(self, starting_time, ending_time):
+    def calculate_time_price(self, starting_time, ending_time, room_class = 'normal'):
         """
         estimate time price every 10 minutes
         :param starting_time:
@@ -272,8 +271,13 @@ class Controler:
         total_time = sec / 60 / 10
         even_time = np.floor(total_time)
 
+        time_class = 'thời gian'
+        if room_class == 'VIP':
+            time_class = 'thời gian(VIP)'
+
+
         # get directly time id in product_data
-        origin_price = self.origin_time_price = self.product_control.get_price_by_name("thời gian")
+        origin_price = self.origin_time_price = self.product_control.get_price_by_name(time_class)
         origin_price = self.Storage.remove_dot_to_number(origin_price)
         origin_price /= 6
         result = origin_price * even_time

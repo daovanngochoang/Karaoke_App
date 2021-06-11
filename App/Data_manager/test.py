@@ -15,7 +15,7 @@ time_control1 = time_control()
 print(order_manage.select_all())
 product.drop()
 product.create_table()
-# product.read_file_and_insert_product("data.xlsx")
+product.read_file_and_insert_product("data.xlsx")
 #
 order_manage.drop()
 order_manage.create()

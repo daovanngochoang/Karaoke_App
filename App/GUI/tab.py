@@ -9,7 +9,7 @@ from Data_manager.src.time_control import time_control
 from PIL import Image, ImageTk
 
 class tab:
-    def __init__(self, root, tab_parent, name):
+    def __init__(self, root, tab_parent, name, room_class = 'normal'):
         self.root = root
         self.tab_parent =tab_parent
         self.room_name = 1
@@ -19,6 +19,11 @@ class tab:
         self.sec = 00
         self.min = 00
         self.time = 0
+
+        self.room_class = 'normal'
+        if room_class == 'VIP':
+            self.room_class = 'VIP'
+
 
         self.product_manager1 = product_manager()
         self.bill_manage1 = bill_manager()
@@ -124,12 +129,10 @@ class tab:
                         command=lambda: self.Stop())
 
 
-
-
         self.canvas.create_window(160, 12, anchor=NW, window=button_ketthuc, width=130, height=52)
         button_xong = Button(self.tab1, text="xong", font=('Time New Roman', 17), bg="#505863", fg="#FFDC82", relief=FLAT,
                         command=lambda: [self.Reset(),
-                                         display_bill.delete("1.0", "end"),self.control.order_closing(display_bill, self.order_show)])
+                                         display_bill.delete("1.0", "end"),self.control.order_closing(display_bill, self.room_class)])
         self.canvas.create_window(300, 12, anchor=NW, window=button_xong, width=130, height=52)
 
         button_in_bill = Button(self.tab1, text="In Bill", font=('Time New Roman', 19), bg="#505863", fg="#FFDC82", relief=FLAT,
@@ -210,7 +213,7 @@ class tab:
 
             mylist = []
             for i in self.product_manager1.select_all():
-                if i[1] != "thời gian":
+                if i[1] != "thời gian" and i[1] != "thời gian(VIP)":
                     mylist.append((i[0], i[1], i[3]))
             col = 0
             row = 1
